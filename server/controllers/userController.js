@@ -47,3 +47,44 @@ exports.register = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !validator.isEmail(email)) {
+            throw new Error(createError(401, "invalide email"));
+        }
+        if (!password || password.length < 3) {
+            throw new Error(createError(401, "invalide password"));
+        }
+
+        // check if user exists;
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            throw new Error(createError(400, "invalid credentials"));
+        }
+
+        // check if password is ok
+        const isPasswordOk = await bcrypt.compare(password, user.password);
+        if (!isPasswordOk) {
+            throw new Error(createError(400, "invalid credentials"));
+        }
+
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.SECRET,
+            { expiresIn: 24 * 60 * 60 }
+        );
+
+        res.cookie("x-auth-token", token, { httpOnly: true })
+            .status(200)
+            .json({
+                success: true,
+                user: { username: user.username, email: user.email },
+            });
+    } catch (err) {
+        next(err);
+    }
+};
