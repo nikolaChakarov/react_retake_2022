@@ -9,6 +9,16 @@ exports.register = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
 
+        if (!username) {
+            throw new Error(createError(401, "invalide username"));
+        }
+        if (!email || !validator.isEmail(email)) {
+            throw new Error(createError(401, "invalide email"));
+        }
+        if (!password || password.length < 3) {
+            throw new Error(createError(401, "invalide password"));
+        }
+
         // check if user's email already exists;
         let user = await User.findOne({ email });
 
@@ -21,17 +31,18 @@ exports.register = async (req, res, next) => {
         user = new User({ username, email, password: hashed });
         await user.save();
 
-        if (!username) {
-            throw new Error(createError(401, "invalide username"));
-        }
-        if (!email || !validator.isEmail(email)) {
-            throw new Error(createError(401, "invalide email"));
-        }
-        if (!password || password.length < 3) {
-            throw new Error(createError(401, "invalide password"));
-        }
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.SECRET,
+            { expiresIn: 24 * 60 * 60 }
+        );
 
-        res.status(200).json({ username, email });
+        res.cookie("x-auth-token", token, { httpOnly: true })
+            .status(200)
+            .json({
+                success: true,
+                user: { username: user.username, email: user.email },
+            });
     } catch (err) {
         next(err);
     }
