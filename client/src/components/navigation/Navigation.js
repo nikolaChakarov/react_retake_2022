@@ -15,24 +15,33 @@ const Navigation = () => {
     }, [user]);
 
     return (
-        <NavigationContainer className="navigation-container">
-            <div className="logo">PETS</div>
-            <ul>
-                {menuLinks.map((link, idx) => (
-                    <li key={idx}>
-                        <Link to={`/${link}`}>{link}</Link>
-                    </li>
-                ))}
-            </ul>
+        <NavigationContainer className="nav-container">
+            <div className="nav-wrapper">
+                <div className="logo">PETS</div>
+                <ul>
+                    {menuLinks.map((link, idx) => (
+                        <li key={idx}>
+                            <Link to={`/${link}`}>{link}</Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </NavigationContainer>
     );
 };
 
 const NavigationContainer = styled.div`
-    display: flex;
     padding: 10px 20px;
     background-color: var(--yellow);
-    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    .nav-wrapper {
+        max-width: 1024px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
 
     .logo {
         flex: 1;
