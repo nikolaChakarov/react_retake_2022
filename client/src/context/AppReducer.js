@@ -28,6 +28,11 @@ const AppReducer = (state, action) => {
                 errMessage: null,
                 user: action.payload,
             };
+        case "LOGOUT":
+            return {
+                ...state,
+                user: null,
+            };
 
         default:
             return state;
