@@ -1,6 +1,6 @@
 :root {
     --yellow: #f28705;
-    --grey: #394a59;
+    --gray: #394a59;
     --orange: #f25c05;
     --shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
@@ -25,4 +25,8 @@ input {
 
 ul {
     list-style: none;
+}
+
+button {
+    cursor: pointer;
 }

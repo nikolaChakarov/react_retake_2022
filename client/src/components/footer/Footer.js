@@ -14,7 +14,7 @@ const FooterContainer = styled.div`
     padding: 10px 20px;
     justify-content: center;
     border-top: 1px groove #fff;
-    color: var(--grey);
+    color: var(--gray);
     font-size: 14px;
     span {
         font-weight: 500;

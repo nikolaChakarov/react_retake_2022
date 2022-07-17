@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const User = require("../models/User");
 const { createError } = require("../utils/createError");
 var validator = require("validator");
@@ -79,7 +79,7 @@ exports.login = async (req, res, next) => {
         );
 
         res.cookie("x-auth-token", token, { httpOnly: true })
-            .status(200)
+            .status(201)
             .json({
                 success: true,
                 user: { username: user.username, email: user.email },

@@ -1,4 +1,4 @@
-import { useReducer, createContext } from "react";
+import { useReducer, createContext, useEffect } from "react";
 import AppReducer from "./AppReducer";
 
 const initState = {
@@ -6,7 +6,7 @@ const initState = {
         ? JSON.parse(localStorage.getItem("user"))
         : null,
     isLoading: false,
-    error: false,
+    errMessage: null,
 };
 
 export const GlobalContext = createContext(initState);
@@ -14,12 +14,18 @@ export const GlobalContext = createContext(initState);
 export const GlobalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AppReducer, initState);
 
+    useEffect(() => {
+        state.user
+            ? localStorage.setItem("user", JSON.stringify(state.user))
+            : localStorage.removeItem("user");
+    }, [state.user]);
+
     return (
         <GlobalContext.Provider
             value={{
                 user: state.user,
                 isLoading: state.isLoading,
-                error: state.error,
+                errMessage: state.errMessage,
                 dispatch,
             }}
         >
