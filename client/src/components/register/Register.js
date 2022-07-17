@@ -1,4 +1,4 @@
-import { useRef, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { GlobalContext } from "../../context/GlobalState";
@@ -6,12 +6,24 @@ import { GlobalContext } from "../../context/GlobalState";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Close } from "@mui/icons-material";
 
-const Login = () => {
+const Register = () => {
     const { user, dispatch, isLoading, errMessage } = useContext(GlobalContext);
 
     const navigate = useNavigate();
-    const emailRef = useRef();
-    const passwordRef = useRef();
+
+    const [userInfo, setUserInfo] = useState({
+        username: "",
+        password: "",
+        password2: "",
+        email: "",
+    });
+
+    const onInputChange = (e) => {
+        setUserInfo((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,13 +32,10 @@ const Login = () => {
             type: "LOADING",
         });
 
-        const emailEl = emailRef.current;
-        const passwordEl = passwordRef.current;
-
-        const userInfo = { email: emailEl.value, password: passwordEl.value };
+        console.log(userInfo);
 
         const dbResponse = await (
-            await fetch("http://localhost:5005/api/users/login", {
+            await fetch("http://localhost:5005/api/users/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,17 +80,30 @@ const Login = () => {
     }, [user, navigate]);
 
     return (
-        <LoginContainer className="login-container">
-            <div className="login-wrapper">
-                <h3>Please, login!</h3>
-                <form className="login-form" onSubmit={handleSubmit}>
+        <RegisterContainer className="register-container">
+            <div className="register-wrapper">
+                <h3>Please, register!</h3>
+                <form className="register-form" onSubmit={handleSubmit}>
+                    <label htmlFor="username">
+                        <span>Username</span>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={userInfo.username}
+                            onChange={onInputChange}
+                            required
+                        />
+                    </label>
+
                     <label htmlFor="email">
                         <span>Email</span>
                         <input
                             type="text"
                             id="email"
                             name="email"
-                            ref={emailRef}
+                            value={userInfo.email}
+                            onChange={onInputChange}
                             required
                         />
                     </label>
@@ -92,14 +114,26 @@ const Login = () => {
                             type="text"
                             id="password"
                             name="password"
-                            ref={passwordRef}
+                            value={userInfo.password}
+                            onChange={onInputChange}
                             required
                         />
                     </label>
 
+                    <label htmlFor="password2">
+                        <span>Repeat password</span>
+                        <input
+                            type="text"
+                            id="password2"
+                            name="password2"
+                            value={userInfo.password2}
+                            onChange={onInputChange}
+                        />
+                    </label>
+
                     <div className="bttns-container">
-                        <button className="bttn bttn-login" type="submit">
-                            Login
+                        <button className="bttn bttn-register" type="submit">
+                            Register
                         </button>
                         <button
                             className="bttn bttn-cancel"
@@ -120,10 +154,10 @@ const Login = () => {
                     </div>
                 </form>
 
-                <div className="no-have-account">
+                <div className="have-account">
                     <span>
-                        Don't have an account? Please,{" "}
-                        <Link to={"/register"}>Register here.</Link>
+                        Already have an account? Please,{" "}
+                        <Link to={"/login"}>Login here.</Link>
                     </span>
                 </div>
 
@@ -137,11 +171,11 @@ const Login = () => {
                     </div>
                 )}
             </div>
-        </LoginContainer>
+        </RegisterContainer>
     );
 };
 
-const LoginContainer = styled.div`
+const RegisterContainer = styled.div`
     position: absolute;
     background: rgba(0, 0, 0, 0.3);
     top: 0;
@@ -154,7 +188,7 @@ const LoginContainer = styled.div`
     align-items: center;
     color: var(--gray);
 
-    .login-wrapper {
+    .register-wrapper {
         background: #fff;
         padding: 20px;
         display: flex;
@@ -169,7 +203,7 @@ const LoginContainer = styled.div`
         color: var(--gray);
     }
 
-    .login-form {
+    .register-form {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -202,7 +236,7 @@ const LoginContainer = styled.div`
             border-radius: 10px 15px;
         }
 
-        .bttn-login {
+        .bttn-register {
             background: var(--orange);
         }
 
@@ -229,7 +263,7 @@ const LoginContainer = styled.div`
         }
     }
 
-    .no-have-account {
+    .have-account {
         font-size: 12px;
         padding-top: 5px;
         border-top: 1px groove #fff;
@@ -241,4 +275,4 @@ const LoginContainer = styled.div`
     }
 `;
 
-export default Login;
+export default Register;

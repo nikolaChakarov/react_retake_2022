@@ -7,23 +7,27 @@ var validator = require("validator");
 
 exports.register = async (req, res, next) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, password2 } = req.body;
 
         if (!username) {
-            throw new Error(createError(401, "invalide username"));
+            throw createError(401, "invalide username");
         }
         if (!email || !validator.isEmail(email)) {
-            throw new Error(createError(401, "invalide email"));
+            throw createError(401, "invalide email");
         }
         if (!password || password.length < 3) {
-            throw new Error(createError(401, "invalide password"));
+            throw createError(401, "invalide password");
+        }
+
+        if (password !== password2) {
+            throw createError(401, "password don't match");
         }
 
         // check if user's email already exists;
         let user = await User.findOne({ email });
 
         if (user) {
-            throw new Error(createError(500, "email already taken"));
+            throw createError(500, "email already taken");
         }
 
         const hashed = await bcrypt.hash(password, Number(process.env.SALT));
