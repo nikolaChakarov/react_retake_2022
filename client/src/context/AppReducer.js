@@ -28,6 +28,13 @@ const AppReducer = (state, action) => {
                 errMessage: null,
                 user: action.payload,
             };
+        case "GET_CATS":
+            return {
+                ...state,
+                isLoading: false,
+                catsList: action.payload.catList,
+                sliderList: action.payload.sliderList,
+            };
         case "LOGOUT":
             return {
                 ...state,

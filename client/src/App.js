@@ -13,13 +13,15 @@ const App = () => {
         <AppContainer className="app-container">
             <Navigation />
 
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/logout" element={<Logout />} />
-            </Routes>
+            <div className="app-wrapper">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/logout" element={<Logout />} />
+                </Routes>
+            </div>
             <Footer />
         </AppContainer>
     );
@@ -30,6 +32,16 @@ const AppContainer = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
+
+    .app-wrapper {
+        overflow-y: scroll;
+        display: flex;
+        justify-content: center;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
 `;
 
 export default App;

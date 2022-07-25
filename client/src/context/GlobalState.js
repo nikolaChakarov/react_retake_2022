@@ -7,6 +7,8 @@ const initState = {
         : null,
     isLoading: false,
     errMessage: null,
+    catsList: [],
+    sliderList: [],
 };
 
 export const GlobalContext = createContext(initState);
@@ -26,6 +28,8 @@ export const GlobalProvider = ({ children }) => {
                 user: state.user,
                 isLoading: state.isLoading,
                 errMessage: state.errMessage,
+                catsList: state.catsList,
+                sliderList: state.sliderList,
                 dispatch,
             }}
         >
